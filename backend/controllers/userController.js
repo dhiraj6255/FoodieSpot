@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 
 // Creating a Token
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET)
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' }) // or '1h', '30m'
 }
 
 // User register route
@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
 
         const user = await newUser.save()
         const token = createToken(user._id)
-        res.json({ success: true, token })
+        res.json({ success: true, message: "Account created successfully", token })
     } catch (error) {
         console.log(error)
         res.json({ success: false, message: error.message })

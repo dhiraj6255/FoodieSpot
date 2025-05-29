@@ -10,15 +10,19 @@ const Login = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const { token, setToken, navigate, backendUrl, getUserCart } = useContext(ShopContext)
 
-    const sonSubmitHandler = async (event) => {
+    const onSubmitHandler = async (event) => {
         event.preventDefault();
+        if (loading) return
+        setLoading(true)
         try {
             if (currState === "Sign Up") {
                 const response = await axios.post(backendUrl + '/api/user/register', { name, email, password })
                 if (response.data.success) {
+                    toast.success(response.data.message)
                     setToken(response.data.token)
                     localStorage.setItem("token", response.data.token)
                 } else {
@@ -39,6 +43,8 @@ const Login = () => {
         } catch (error) {
             console.log(error)
             toast.error(error.message)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -63,7 +69,7 @@ const Login = () => {
                 {/* FORM SIDE */}
                 <div className='flexCenter w-full sm:w-1/2'>
                     <form
-                        onSubmit={sonSubmitHandler}
+                        onSubmit={onSubmitHandler}
                         className='flex flex-col items-center w-[90%] sm:max-w-md m-auto gap-y-5 text-gray-800'
                     >
                         <div className='w-full mb-4'>
@@ -110,8 +116,9 @@ const Login = () => {
                         <button
                             type='submit'
                             className='btn-dark w-full mt-5 !py-[7px] !rounded'
+                            disabled={loading}
                         >
-                            {currState === "Sign Up" ? "Sign Up" : "Login"}
+                            {loading ? 'Please wait...' : (currState === "Sign Up" ? "Sign Up" : "Login")}
                         </button>
                         <div className="w-full flex flex-col gap-y-3 medium-14">
                             {currState === "Login" ? (
