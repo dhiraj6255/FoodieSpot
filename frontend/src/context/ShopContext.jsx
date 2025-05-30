@@ -42,7 +42,7 @@ const ShopContextProvider = (props) => {
     }
 
     // Getting total cart count
-    const getCartCount = (params) => {
+    const getCartCount = () => {
         let totalCount = 0
         for (const items in cartItems) {
             for (const item in cartItems[items]) {

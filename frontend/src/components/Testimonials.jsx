@@ -5,8 +5,6 @@ import user1 from '../assets/testimonials/user1.png'
 import user2 from '../assets/testimonials/user2.png'
 import food1 from '../assets/food_1.png'
 import food2 from '../assets/food_2.png'
-import food12 from '../assets/food_12.png'
-import food44 from '../assets/food_44.png'
 
 const Testimonials = () => {
     return (

@@ -8,11 +8,18 @@ const Login = ({ setToken }) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const onSubmitHandler = async (e) => {
+        e.preventDefault()
+        if (!email || !password) {
+            toast.warn("Please fill in all fields")
+            return
+        }
+
         try {
-            e.preventDefault()
-            const response = await axios.post(backendUrl + '/api/user/admin', { email, password })
+            setLoading(true)
+            const response = await axios.post(`${backendUrl}/api/user/admin`, { email, password })
             if (response.data.success) {
                 toast.success(response.data.message)
                 setToken(response.data.token)
@@ -21,7 +28,9 @@ const Login = ({ setToken }) => {
             }
         } catch (error) {
             console.log(error)
-            toast.error(error.message)
+            toast.error(error.response?.data?.message || error.message)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -64,9 +73,10 @@ const Login = ({ setToken }) => {
                         </div>
                         <button
                             type='submit'
-                            className='btn-dark w-full mt-5 !py-[7px] !rounded'
+                            className='btn-dark w-full mt-5 !py-[7px] !rounded disabled:opacity-50'
+                            disabled={loading}
                         >
-                            Login
+                            {loading ? "Logging in..." : "Login"}
                         </button>
                     </form>
                 </div>

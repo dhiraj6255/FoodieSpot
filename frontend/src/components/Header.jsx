@@ -10,6 +10,8 @@ const Header = () => {
 
     const { getCartCount, navigate, token, setToken } = useContext(ShopContext)
     const [menuOpened, setMenuOpened] = useState(false)
+    const [userMenuOpen, setUserMenuOpen] = useState(false)
+
 
     const toggleMenu = () => {
         setMenuOpened((prev) => !prev)
@@ -34,7 +36,7 @@ const Header = () => {
 
                 {/* Navbar */}
                 <div className='flex-1'>
-                    <Navbar toggLeMenu={toggleMenu} menuOpened={menuOpened} containerStyles={`${menuOpened ? "flex flex-col gap-y-12 h-screen w-[222px] absolute left-0 top-0 bg-white z-50 px-10 py-4 shadow-xl" : "hidden xl:flex gap-x-5 xl:gap-x-8 medium-15 rounded-full px-2 py-1"}`} />
+                    <Navbar toggleMenu={toggleMenu} menuOpened={menuOpened} containerStyles={`${menuOpened ? "flex flex-col gap-y-12 h-screen w-[222px] absolute left-0 top-0 bg-white z-50 px-10 py-4 shadow-xl" : "hidden xl:flex gap-x-5 xl:gap-x-8 medium-15 rounded-full px-2 py-1"}`} />
                 </div>
 
                 {/* Right side */}
@@ -46,35 +48,43 @@ const Header = () => {
                         <RiShoppingCartFill className='text-2xl' />
                         <span className='bg-secondary text-white medium-14 absolute left-3.5 -top-2.5 flexCenter w-4 h-4 rounded-full shadow-inner'>{getCartCount()}</span>
                     </Link>
-                    <div className='group relative'>
-                        <div onClick={() => navigate('/login')}>
-
-                            {
-                                token ?
-                                    <div className='my-[9px]'>
-                                        <TbUserCircle className='text-[29px] cursor-pointer' />
-                                    </div>
-                                    :
-                                    <button
-                                        className='btn-outline !border-none flexCenter gap-x-2 !py-3'>Login <RiUserLine className='text-xl' />
+                    <div className='relative'>
+                        <div onClick={() => setUserMenuOpen(prev => !prev)}>
+                            {token ? (
+                                <TbUserCircle className='text-[29px] cursor-pointer' />
+                            ) : (
+                                <Link to={"/login"}>
+                                    <button className='btn-outline !border-none flexCenter gap-x-2 !py-3'>
+                                        Login <RiUserLine className='text-xl' />
                                     </button>
-                            }
+                                </Link>
+                            )}
                         </div>
 
-                        {token && (
-                            <>
-                                <ul className='bg-white shadow-sm p-2 w-32 ring-1 ring-slate-900/10 rounded absolute right-0 top-10 hidden group-hover:flex flex-col'>
-                                    <li onClick={() => navigate('/orders')} className='flexBetween cursor-pointer'>
-                                        <p>Orders</p>
-                                        <TbArrowRight className='opacity-50 text-[19px]' />
-                                    </li>
-                                    <hr className='my-2' />
-                                    <li onClick={logout} className='flexBetween cursor-pointer'>
-                                        <p>Logout</p>
-                                        <TbArrowRight className='opacity-50 text-[19px]' />
-                                    </li>
-                                </ul>
-                            </>
+                        {token && userMenuOpen && (
+                            <ul className='bg-white shadow-sm p-2 w-32 ring-1 ring-slate-900/10 rounded absolute right-0 top-10 flex flex-col z-50'>
+                                <li
+                                    onClick={() => {
+                                        navigate('/orders')
+                                        setUserMenuOpen(false)
+                                    }}
+                                    className='flexBetween cursor-pointer'
+                                >
+                                    <p>Orders</p>
+                                    <TbArrowRight className='opacity-50 text-[19px]' />
+                                </li>
+                                <hr className='my-2' />
+                                <li
+                                    onClick={() => {
+                                        logout()
+                                        setUserMenuOpen(false)
+                                    }}
+                                    className='flexBetween cursor-pointer'
+                                >
+                                    <p>Logout</p>
+                                    <TbArrowRight className='opacity-50 text-[19px]' />
+                                </li>
+                            </ul>
                         )}
                     </div>
                 </div>
