@@ -16,18 +16,24 @@ const Navbar = ({ containerStyles, toggleMenu, menuOpened }) => {
         <nav className={containerStyles}>
             {menuOpened && (
                 <>
-                    <button onClick={toggleMenu} className='self-end relative left-8'>
+                    <button
+                        onClick={toggleMenu}
+                        className='self-end relative left-8'
+                        aria-label="Close menu"
+                    >
                         <FaRegWindowClose className='text-xl cursor-pointer' />
                     </button>
-                    <Link to='/' className='bold-24 mb-10'>
+                    <Link to='/' onClick={toggleMenu} className='bold-24 mb-10'>
                         <h4 className='text-secondary'>FoodieSpot</h4>
                     </Link>
                 </>
             )}
+
             {navItems.map(({ to, label, icon }) => (
                 <div key={to} className='inline-flex'>
                     <NavLink
                         to={to}
+                        onClick={menuOpened ? toggleMenu : undefined}
                         className={({ isActive }) =>
                             `flexCenter gap-x-2 ${isActive ? 'active-link' : ''}`
                         }
